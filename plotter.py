@@ -12,7 +12,7 @@ class Plotter:
     def __init__(self):
         plt.figure()
 
-    def add_polygon(self, xs, ys):
+    def add_polygon(self, xs, ys) -> object:
         plt.fill(xs, ys, 'lightgray', label='Polygon')
 
     def add_point(self, x, y, kind=None):
