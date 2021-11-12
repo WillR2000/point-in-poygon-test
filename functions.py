@@ -15,6 +15,9 @@ class Plotter:
     def add_polygon(self, xs, ys) -> object:
         plt.fill(xs, ys, 'lightgray', label='Polygon')
 
+    def add_mbr(self, xs, ys) -> object:
+        plt.fill(xs, ys, 'gray', label='MBR')
+
     def add_point(self, x, y, kind=None):
         if kind == 'outside':
             plt.plot(x, y, 'ro', label='Outside')
@@ -30,6 +33,7 @@ class Plotter:
         by_label = OrderedDict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys())
         plt.show()
+
 
 def open_poly_x():
     with open('polygon.csv') as p:
@@ -47,6 +51,7 @@ def open_poly_x():
 
     return x_coordinates
 
+
 def open_poly_y():
     with open('polygon.csv') as p:
         coordinates = p.readlines()
@@ -62,6 +67,36 @@ def open_poly_y():
     y_coordinates = [int(i) for i in y_coord]
 
     return y_coordinates
+
+
+def min_poly_x(x_coords):
+    res = x_coords[0]
+    for c in x_coords[1:]:
+        if c < res:
+            res = c
+    return res
+
+def min_poly_y(y_coords):
+    res = y_coords[0]
+    for c in y_coords[1:]:
+        if c < res:
+            res = c
+    return res
+
+def max_poly_x(x_coords):
+    res = x_coords[0]
+    for c in x_coords[1:]:
+        if c > res:
+            res = c
+    return res
+
+def max_poly_y(y_coords):
+    res = y_coords[0]
+    for c in y_coords[1:]:
+        if c > res:
+            res = c
+    return res
+
 
 def open_input_x():
     with open('input.csv') as I:
@@ -79,6 +114,7 @@ def open_input_x():
 
     return input_x
 
+
 def open_input_y():
     with open('input.csv') as I:
         points = I.readlines()
@@ -94,4 +130,3 @@ def open_input_y():
     input_y = [float(i) for i in point_y]
 
     return input_y
-
