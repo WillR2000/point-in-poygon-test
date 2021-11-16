@@ -11,11 +11,8 @@ from functions import open_input_y
 from functions import Plotter
 
 def main():
-    x_coords = open_poly_x()
-    y_coords = open_poly_y()
-
-    max_coords = max_poly_x(x_coords), max_poly_y(y_coords)
-    min_coords = min_poly_x(x_coords), min_poly_y(y_coords)
+    max_coords = max_poly_x(), max_poly_y()
+    min_coords = min_poly_x(), min_poly_y()
 
     mbr_x = max_coords[0], max_coords[0], min_coords[0], min_coords[0]
     mbr_y = max_coords[1], min_coords[1], min_coords[1], max_coords[1]

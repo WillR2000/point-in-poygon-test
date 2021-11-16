@@ -51,7 +51,6 @@ def open_poly_x():
 
     return x_coordinates
 
-
 def open_poly_y():
     with open('polygon.csv') as p:
         coordinates = p.readlines()
@@ -69,34 +68,86 @@ def open_poly_y():
     return y_coordinates
 
 
-def min_poly_x(x_coords):
-    res = x_coords[0]
-    for c in x_coords[1:]:
+def min_poly_x():
+
+    with open('polygon.csv') as p:
+        coordinates = p.readlines()
+
+    coordinates.pop(0)
+
+    x_coord = []
+
+    for each_coord in coordinates:
+        id, x, y = each_coord.split(',')
+        x_coord.append(x.strip())
+
+    x_coord = [int(i) for i in x_coord]
+
+    res = x_coord[0]
+    for c in x_coord[1:]:
         if c < res:
             res = c
     return res
 
-def min_poly_y(y_coords):
-    res = y_coords[0]
-    for c in y_coords[1:]:
+def min_poly_y():
+    with open('polygon.csv') as p:
+        coordinates = p.readlines()
+
+    coordinates.pop(0)
+
+    y_coord = []
+
+    for each_coord in coordinates:
+        id, x, y = each_coord.split(',')
+        y_coord.append(y.strip())
+
+    y_coord = [int(i) for i in y_coord]
+
+    res = y_coord[0]
+    for c in y_coord[1:]:
         if c < res:
             res = c
     return res
 
-def max_poly_x(x_coords):
-    res = x_coords[0]
-    for c in x_coords[1:]:
+def max_poly_x():
+    with open('polygon.csv') as p:
+        coordinates = p.readlines()
+
+    coordinates.pop(0)
+
+    x_coord = []
+
+    for each_coord in coordinates:
+        id, x, y = each_coord.split(',')
+        x_coord.append(x.strip())
+
+    x_coord = [int(i) for i in x_coord]
+
+    res = x_coord[0]
+    for c in x_coord[1:]:
         if c > res:
             res = c
     return res
 
-def max_poly_y(y_coords):
-    res = y_coords[0]
-    for c in y_coords[1:]:
+def max_poly_y():
+    with open('polygon.csv') as p:
+        coordinates = p.readlines()
+
+    coordinates.pop(0)
+
+    y_coord = []
+
+    for each_coord in coordinates:
+        id, x, y = each_coord.split(',')
+        y_coord.append(y.strip())
+
+    y_coord = [int(i) for i in y_coord]
+
+    res = y_coord[0]
+    for c in y_coord[1:]:
         if c > res:
             res = c
     return res
-
 
 def open_input_x():
     with open('input.csv') as I:
@@ -114,7 +165,6 @@ def open_input_x():
 
     return input_x
 
-
 def open_input_y():
     with open('input.csv') as I:
         points = I.readlines()
@@ -130,3 +180,20 @@ def open_input_y():
     input_y = [float(i) for i in point_y]
 
     return input_y
+
+def open_input():
+    with open('input.csv') as I:
+        points = I.readlines()
+
+        points.pop(0)
+
+        id_x_y = []
+
+        for each_point in points:
+            id, x, y = each_point.split(',')
+            id_x_y.append([id.strip(), float(x.strip()), float(y.strip())])
+
+        input_points = id_x_y
+
+    return input_points
+
