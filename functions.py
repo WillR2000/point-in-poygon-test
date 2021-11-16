@@ -197,3 +197,12 @@ def open_input():
 
     return input_points
 
+def mbr_plot():
+    max_coords = max_poly_x(), max_poly_y()
+    min_coords = min_poly_x(), min_poly_y()
+
+    mbr_x = max_coords[0], max_coords[0], min_coords[0], min_coords[0]
+    mbr_y = max_coords[1], min_coords[1], min_coords[1], max_coords[1]
+
+    return mbr_x, mbr_y
+
