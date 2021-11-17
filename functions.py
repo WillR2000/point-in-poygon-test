@@ -6,6 +6,18 @@ import matplotlib.pyplot as plt
 # if plotting does not work comment the following line
 matplotlib.use('TkAgg')
 
+class Geometry:
+    def __init__(self, name):
+        self.__name = name
+
+    def get_name(self):
+        return self.__name
+
+class Line(Geometry):
+    def __init__(self, name, point_1, point_2):
+        super().__init__(name)
+        self.__point_1 = point_1
+        self.__point_2 = point_2
 
 class Plotter:
 
@@ -34,12 +46,11 @@ class Plotter:
         plt.legend(by_label.values(), by_label.keys())
         plt.show()
 
-
 def open_poly_x():
     with open('polygon.csv') as p:
         coordinates = p.readlines()
 
-    coordinates.pop(0)
+    coordinates.pop()
 
     x_coord = []
 
@@ -206,3 +217,20 @@ def mbr_plot():
 
     return mbr_x, mbr_y
 
+def open_lines():
+    with open('polygon.csv') as p:
+        coordinates = p.readlines()
+
+        coordinates.pop(0)
+
+        poly_id_x_y = []
+
+        for each_point in coordinates:
+            id, x, y = each_point.split(',')
+            poly_id_x_y.append([id.strip(), int(x.strip()), int(y.strip())])
+
+        lines = poly_id_x_y
+
+        return(lines)
+
+print(open_lines())
