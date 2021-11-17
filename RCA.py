@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+
 # SET counting to 0
 # FOR each line of polygon:
 #     IF ray crosses the line:

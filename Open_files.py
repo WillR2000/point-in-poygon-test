@@ -12,9 +12,9 @@ from functions import open_input_x
 from functions import open_input_y
 
 def main():
-    Plotter.add_polygon(0, open_poly_x(), open_poly_y())
-    Plotter.add_point(0, open_input_x(), open_input_y())
-    Plotter.show(0)
+    Plotter.add_polygon(open_poly_x(), open_poly_y())
+    Plotter.add_point(open_input_x(), open_input_y())
+    Plotter.show()
 
 if __name__ == '__main__':
     main()
