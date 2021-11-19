@@ -319,47 +319,44 @@ def rays():
 # Lifted and adapted from StackOverflow
 # https://stackoverflow.com/questions/20677795/how-do-i-compute-the-intersection-point-of-two-lines
 # Methods developed from week 5 presentation - Aldo Lipani
-def line_intersection(line, ray):
+def rca():
+    for ray in rays:
+        for line in lines:
 
-    line_slope = (line[3] - line[1]) / (line[2] - line[0])
-    ray_slope = (ray[3] - ray[1]) / (ray[2] - ray[0])
+            line_slope = (line[3] - line[1]) / (line[2] - line[0])
+            ray_slope = (ray[3] - ray[1]) / (ray[2] - ray[0])
 
-    line_ycept =  line[1] - line_slope * line[0]
-    rayycept = ray[1] - ray_slope * ray[0]
+            line_ycept = line[1] - line_slope * line[0]
+            rayycept = ray[1] - ray_slope * ray[0]
 
-    def line_intersect(m1, b1, m2, b2):
+            print(line_ycept)
+            print(rayycept)
+
+        m1 = line_slope
+        b1 = line_ycept
+        m2 = ray_slope
+        b2 = rayycept
+
         if m1 == m2:
-            print("These lines are parallel!!!")
-            return None
+            ''
 
         x = (b2 - b1) / (m1 - m2)
         y = m1 * x + b1
+
         return x, y
 
-    return line_intersect()
+        count = 0
 
-def rca():
-    results = []
-    count = 0
-    for ray in rays():
-        for line in lines():
-            if point_on_line(line, ray):
-                results.append('boundary')
+        if min_poly_x() < x < max_poly_x() and min_poly_y() < y < max_poly_y():
+            count = + 1
+
+        for point in read_input_csv():
+            if (count % 2) == 0:
+                Plotter.add_point(0, x, y, kind='outside')
+                results.append(point)
             else:
-                if line_intersection(line, ray) == Exception:
-                    ''
-                else:
-                    x, y = line_intersection()
-                    if min_poly_x() < x < max_poly_x() and min_poly_y() < y < max_poly_y():
-                        count = + 1
-
-    for point in read_input_csv():
-        if (count % 2) == 0:
-            point.append('outside')
-            results.append(point)
-        else:
-            point.append('inside')
-            results.append(point)
+                Plotter.add_point(0, x, y, kind='inside')
+                results.append(point)
 
         return results
 
