@@ -234,22 +234,9 @@ def max_poly_y():
 
 
 def mbr():
-    with open('input.csv') as I:
-        points = I.readlines()
-
-        points.pop(0)
-
-        id_x_y = []
-
-        for each_point in points:
-            id, x, y = each_point.split(',')
-            id_x_y.append([float(x.strip()), float(y.strip())])
-
-        input_points = id_x_y
-
     mbr_results = []
 
-    for value in input_points:
+    for value in read_input_csv():
         if min_poly_x() <= value[0] <= max_poly_x() and min_poly_y() <= value[1] <= max_poly_y():
             mbr_results.append(value)
         else:
@@ -257,7 +244,6 @@ def mbr():
 
     return mbr_results
 
-print('mbr results', mbr())
 
 def lines():
     with open('polygon.csv') as p:
@@ -286,16 +272,58 @@ def lines():
 
 # Code lifted and adapted from: https://www.kite.com/python/answers/how-to-determine-if-a-point-is-on-a-line
 # Methods developed from week 5 presentation - Aldo Lipani
-def point_on_line():
+def classify_points():
+    mbr_results = []
+
+    for value in read_input_csv():
+        if min_poly_x() <= value[0] <= max_poly_x() and min_poly_y() <= value[1] <= max_poly_y():
+            mbr_results.append(value)
+        else:
+            Plotter.add_point(0, value[0], value[1], kind='outside')
+
     lineslist = lines()
     mbr_results = mbr()
-    point_mbr = mbr_results
-    point_on_line_results = []
 
-    for line in lineslist:
-        for pt3 in point_mbr[0:]:
-            x1, x2, x3, = line[0], line[2], pt3[0]
-            y1, y2, y3, = line[1], line[3], pt3[1]
+    for mbp in mbr_results:
+        count = 0
+        for line in lineslist:
+            p1x = line[0]
+            p1y = line[1]
+            p2x = line[2]
+            p2y = line[3]
+            if p1x == p2x:
+                if p1y < mbp[1] < p2y or p2y < mbp[1] < p1y:
+                    count = count + 1
+            if p1y == p2y == mbp[1]:
+                count = count + 2
+            if p1x == p2x == mbp[0]:
+                count = count + 2
+            if p1x < p2x and p1y < p2y:
+                if p1y <= mbp[1] <= p2y:
+                    if mbp[0] < p1x:
+                        count = count + 1
+            if p1x < p2x and p1y > p2y:
+                if p1y <= mbp[1] <= p2y:
+                    if mbp[0] > p1x:
+                        count = count + 1
+            if p1x > p2x and p1y > p2y:
+                if p1y <= mbp[1] <= p2y:
+                    if mbp[0] < p2x:
+                        count = count + 1
+            if p1x > p2x and p1y < p2y:
+                if p1y <= mbp[1] <= p2y:
+                    if mbp[0] > p2x:
+                        count = count + 1
+
+        if count % 2 == 0:
+            Plotter.add_point(0, mbp[0], mbp[1], kind='outside')
+        else:
+            Plotter.add_point(0, mbp[0], mbp[1], kind='inside')
+
+    for mbp in mbr_results:
+        for line in lineslist:
+            x1, x2, x3, = line[0], line[2], mbp[0]
+            y1, y2, y3, = line[1], line[3], mbp[1]
             if x1 == x2:
                 if (x3 == x2) and (y1 <= y3 <= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
@@ -307,43 +335,47 @@ def point_on_line():
                 elif (y3 == y2) and (x1 >= x3 >= x2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
             elif (y3 - y1) == ((y2 - y1) / (x2 - x1)) * (x3 - x1):
-                if x1 <= x3 <= x2 and y1 >= y3 >= y2:
+                if (x1 <= x3 <= x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
-                elif x1 >= x3 >= x2 and y1 >= y3 >= y2:
+                elif (x1 >= x3 >= x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
-            else:
-                point_results = [x3, y3]
-                point_on_line_results.append(point_results)
 
-    point_on_line_results = point_on_line_results[:54]
-    return point_on_line_results
+print(classify_points())
 
-print('POL', point_on_line())
+            #     # point_on_line_results = point_on_line()
+            #     # lineslist = lines()
+            #     #
+            #     # for line in lineslist:
+            #     #     for xy in point_on_line_results:
 
-def lines():
-    with open('polygon.csv') as p:
-        coordinates = p.readlines()
+#                 point_results = [x3, y3]
+#                 point_on_line_results.append(point_results)
 
-        coordinates.pop(0)
+#
+#     point_on_line_results = point_on_line_results
+#     return point_on_line_results
+#
+# print('POL', point_on_line())
 
-        poly_id_x_y = []
 
-        for each_point in coordinates:
-            id, x, y = each_point.split(',')
-            poly_id_x_y.append([(int(x.strip())), (int(y.strip()))])
-
-        lines = poly_id_x_y[0] + poly_id_x_y[1], poly_id_x_y[1] + poly_id_x_y[2], poly_id_x_y[2] + poly_id_x_y[3], \
-                poly_id_x_y[3] + poly_id_x_y[4], poly_id_x_y[4] + poly_id_x_y[5], poly_id_x_y[5] + poly_id_x_y[6], \
-                poly_id_x_y[6] + poly_id_x_y[7], poly_id_x_y[7] + poly_id_x_y[8], poly_id_x_y[8] + poly_id_x_y[9], \
-                poly_id_x_y[9] + poly_id_x_y[10], poly_id_x_y[10] + poly_id_x_y[11], poly_id_x_y[11] + poly_id_x_y[12], \
-                poly_id_x_y[12] + poly_id_x_y[13], poly_id_x_y[13] + poly_id_x_y[14], poly_id_x_y[14] + poly_id_x_y[15], \
-                poly_id_x_y[15] + poly_id_x_y[16], poly_id_x_y[16] + poly_id_x_y[17], poly_id_x_y[17] + poly_id_x_y[18], \
-                poly_id_x_y[18] + poly_id_x_y[19], poly_id_x_y[19] + poly_id_x_y[0]
-
-    lineslist = list(lines)
-
-    return lineslist
-
+# def rca():
+#     point_on_line_results = point_on_line()
+#     lineslist = lines()
+#
+#     for line in lineslist:
+#         for xy in point_on_line_results:
+#             count = 0
+#             p1x = line[0]
+#             p1y = line[1]
+#             p2x = line[2]
+#             p2y = line[3]
+#             if p1y <= xy[1] <= p2y or p2y <= xy[1] <= p1y:
+#                 if p2x >= xy[0]:
+#                     count = count + 1
+#                     if (count % 2) == 0:
+#                         Plotter.add_point(0, xy[0], xy[1], kind='outside')
+#                     else:
+#                         Plotter.add_point(0, xy[0], xy[1], kind='inside')
 
 
 # Lifted and adapted from StackOverflow
@@ -395,36 +427,3 @@ def lines():
 #                         results.append(y)
 #
 #         return results
-
-
-def rca2():
-    point_on_line_results = point_on_line()
-    lineslist = lines()
-
-    for line in lineslist:
-        for xy in point_on_line_results:
-            count = 0
-            p1x = line[0]
-            p1y = line[1]
-            p2x = line[2]
-            p2y = line[3]
-            if p1y <= xy[1] <= p2y or p2y <= xy[1] <= p1y:
-                if p2x >= xy[0] or p1x >= xy[0]:
-                    count = count + 1
-                if (count % 2) == 0:
-                    Plotter.add_point(0, xy[0], xy[1], kind='outside')
-                else:
-                    Plotter.add_point(0, xy[0], xy[1], kind='inside')
-
-
-
-            #             if x <= xints:
-            #                 Plotter.add_point(0, x, y, kind='inside')
-            #             else:
-            #                 Plotter.add_point(0, x, y, kind='outside')
-            # p1x, p1y = p2x, p2y
-
-
-
-
-
