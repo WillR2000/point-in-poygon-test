@@ -218,7 +218,6 @@ def lines():
 
 def classify_points():
     mbr_results = []
-    classify_results = []
 
     # Methods developed from week 5 presentation - Aldo Lipani
     for value in read_input_csv():
@@ -226,60 +225,74 @@ def classify_points():
             mbr_results.append(value)
         else:
             Plotter.add_point(0, value[0], value[1], kind='outside')
-            classify_results.append(value)
-
-    for mbp in mbr_results:
-        count = 0
-        for line in lines():
-            p1x = line[0]
-            p1y = line[1]
-            p2x = line[2]
-            p2y = line[3]
-            if mbp[0] < p1x or mbp[0] < p2x:
-                if p1y <= mbp[1] < p2y or p2y <= mbp[1] < p1y:
-                    count = count + 1
-                if mbp[1] == p1y or mbp[1] == p2y:
-                    count = count + 2
-                if p1y == p2y == mbp[1]:
-                    count = count + 2
-                if p1x > p2x and p1y > p2y:
-                    if mbp[1] == p2y and p1x >= mbp[0] >= p2x:
-                        count = count + 1
-        if count % 2 == 0:
-            Plotter.add_point(0, mbp[0], mbp[1], kind='outside')
-            classify_results.append(mbp)
-            classify_results.append('Outside')
-        else:
-            Plotter.add_point(0, mbp[0], mbp[1], kind='inside')
-            classify_results.append(mbp)
-            classify_results.append('Inside')
-
-    print(classify_results)
 
     # Code lifted and adapted from:
     # https://www.kite.com/python/answers/how-to-determine-if-a-point-is-on-a-line-segment-in-python
     # Methods developed from week 5 presentation - Aldo Lipani
-    pol_results = []
+
     for mbp in mbr_results:
+        count = 0
         for line in lines():
             x1, x2, x3, = line[0], line[2], mbp[0]
             y1, y2, y3, = line[1], line[3], mbp[1]
+
+            if x3 < x1 or x3 < x2:
+                if y1 <= y3 < y2 or y2 <= y3 < y1:
+                    count = count + 1
+                if y3 == y1 or y3 == y2:
+                    count = count + 2
+                if y1 == y2 == y3:
+                    count = count + 2
+                if x1 > x2 and y1 > y2:
+                    if y3 == y2 and x1 >= x3 >= x2:
+                        count = count + 1
+
             if x1 == x2:
                 if (x3 == x2) and (y1 <= y3 <= y2):
-                    Plotter.add_point(0, x3, y3, kind='boundary')
-                    classify_results.append(mbp)
+                    count = 100
                 elif (x3 == x2) and (y1 >= y3 >= y2):
-                    Plotter.add_point(0, x3, y3, kind='boundary')
+                    count = 100
             elif y1 == y2:
                 if (y3 == y2) and (x1 <= x3 <= x2):
-                    Plotter.add_point(0, x3, y3, kind='boundary')
+                    count = 100
                 elif (y3 == y2) and (x1 >= x3 >= x2):
-                    Plotter.add_point(0, x3, y3, kind='boundary')
+                    count = 100
             elif (y3 - y1) == ((y2 - y1) / (x2 - x1)) * (x3 - x1):
                 if (x1 <= x3 <= x2) and (y1 >= y3 >= y2):
-                    Plotter.add_point(0, x3, y3, kind='boundary')
+                    count = 100
                 elif (x1 >= x3 >= x2) and (y1 >= y3 >= y2):
-                    Plotter.add_point(0, x3, y3, kind='boundary')
+                    count = 100
+
+            if count == 100:
+                Plotter.add_point(0, x3, y3, kind='boundary')
+            elif count % 2 == 0:
+                Plotter.add_point(0, x3, y3, kind='outside')
+            else:
+                Plotter.add_point(0, x3, y3, kind='inside')
+
+
+        # count = 0
+        # for line in lines():
+        #     p1x = line[0]
+        #     p1y = line[1]
+        #     p2x = line[2]
+        #     p2y = line[3]
+        #     if xy[0] < p1x or xy[0] < p2x:
+        #         if p1y <= xy[1] < p2y or p2y <= xy[1] < p1y:
+        #             count = count + 1
+        #         if xy[1] == p1y or xy[1] == p2y:
+        #             count = count + 2
+        #         if p1y == p2y == xy[1]:
+        #             count = count + 2
+        #         if p1x > p2x and p1y > p2y:
+        #             if xy[1] == p2y and p1x >= xy[0] >= p2x:
+        #                 count = count + 1
+        # if count % 2 == 0:
+        #     Plotter.add_point(0, xy[0], xy[1], kind='outside')
+        # else:
+        #     Plotter.add_point(0, xy[0], xy[1], kind='inside')
+
+
 
 
 
