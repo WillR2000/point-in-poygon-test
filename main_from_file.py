@@ -2,8 +2,6 @@ from functions import read_polygon_csv
 from functions import read_input_csv
 from functions import classify_points
 from functions import write_to_csv
-
-
 from plotter import Plotter
 
 def main():

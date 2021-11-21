@@ -1,76 +1,5 @@
-from collections import OrderedDict
+from plotter import Plotter
 
-import matplotlib
-import matplotlib.pyplot as plt
-
-
-class Geometry:
-    def __init__(self, name):
-        self.__name = name
-
-    def get_name(self):
-        return self.__name
-
-
-class Line(Geometry):
-
-    def __init__(self, name, point_1, point_2):
-        super().__init__(name)
-        self.__point_1 = point_1
-        self.__point_2 = point_2
-
-    def point(self, name, x, y):
-        super().__init__(name)
-        self.__x = x
-        self.__y = y
-
-
-class Polygon(Geometry):
-
-    def __init__(self, name, points):
-        super().__init__(name)
-        self.__points = points
-
-    def get_points(self):
-        return self.__points
-
-    def lines(self):
-        res = []
-        points = self.get_points()
-        point_a = points[0]
-        for point_b in points[1:]:
-            res.append(Line(point_a.get_name() + '-' + point_b.get_name(), point_a, point_b))
-            point_a = point_b
-        res.append(Line(point_a.get_name() + '-' + points[0].get_name(), point_a, points[0]))
-        return res
-
-
-class Plotter:
-
-    def __init__(self):
-        plt.figure()
-
-    def add_polygon(self, xs, ys) -> object:
-        plt.fill(xs, ys, 'lightgray', label='Polygon')
-
-    def add_point(self, x, y, kind=None):
-        if kind == 'outside':
-            plt.plot(x, y, 'ro', label='Outside')
-        elif kind == 'boundary':
-            plt.plot(x, y, 'bo', label='Boundary')
-        elif kind == 'inside':
-            plt.plot(x, y, 'go', label='Inside')
-        else:
-            plt.plot(x, y, 'ko', label='Unclassified')
-
-    def show(self):
-        handles, labels = plt.gca().get_legend_handles_labels()
-        by_label = OrderedDict(zip(labels, handles))
-        plt.legend(by_label.values(), by_label.keys())
-        plt.xlabel('x', color = 'k')
-        plt.ylabel('y', color = 'k')
-        plt.grid()
-        plt.show()
 
 
 # class Pointresults:
@@ -252,9 +181,11 @@ def classify_points():
                         count = count + 1
         if count % 2 == 0:
             Plotter.add_point(0, x3, y3, kind='outside')
+            Plotter.add_ray(0, x3, y3, 8, y3)
             classify_results.append([mbp, 'Outside'])
         else:
             Plotter.add_point(0, x3, y3, kind='inside')
+            Plotter.add_ray(0, x3, y3, 8, y3)
             classify_results.append([mbp, 'Inside'])
 
     # Code lifted and adapted from:
@@ -267,23 +198,29 @@ def classify_points():
             if x1 == x2:
                 if (x3 == x2) and (y1 <= y3 <= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    Plotter.add_ray(0, x3, y3, 8, y3)
                     classify_results.append([mbp, 'Boundary'])
                 elif (x3 == x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    Plotter.add_ray(0, x3, y3, 8, y3)
                     classify_results.append([mbp, 'Boundary'])
             elif y1 == y2:
                 if (y3 == y2) and (x1 <= x3 <= x2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    Plotter.add_ray(0, x3, y3, 8, y3)
                     classify_results.append([mbp, 'Boundary'])
                 elif (y3 == y2) and (x1 >= x3 >= x2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    Plotter.add_ray(0, x3, y3, 8, y3)
                     classify_results.append([mbp, 'Boundary'])
             elif (y3 - y1) == ((y2 - y1) / (x2 - x1)) * (x3 - x1):
                 if (x1 <= x3 <= x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    Plotter.add_ray(0, x3, y3, 8, y3)
                     classify_results.append([mbp, 'Boundary'])
                 elif (x1 >= x3 >= x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    Plotter.add_ray(0, x3, y3, 8, y3)
                     classify_results.append([mbp, 'Boundary'])
 
     return classify_results

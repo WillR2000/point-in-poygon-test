@@ -5,6 +5,10 @@ def classify_point():
     x_coord, y_coord = read_polygon_csv()
     x = float(input('x Coordinate: '))
     y = float(input('Y Coordinate: '))
+
+    if x>8 or y>8 or x<-3 or y<-3:
+        raise Exception('Error: Coordinates very far from Polygon')
+
     result = 0
 
     # Methods developed from week 5 presentation - Aldo Lipani
@@ -32,9 +36,11 @@ def classify_point():
                     count = count + 1
     if count % 2 == 0:
         Plotter.add_point(0, x, y, kind='outside')
+        Plotter.add_ray(0, x, y, 8, y)
         result = 'Outside'
     else:
         Plotter.add_point(0, x, y, kind='inside')
+        Plotter.add_ray(0, x, y, 8, y)
         result = 'Inside'
 
     # Code lifted and adapted from:
@@ -47,23 +53,29 @@ def classify_point():
         if x1 == x2:
             if (x3 == x2) and (y1 <= y3 <= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                Plotter.add_ray(0, x, y, 8, y)
                 result = 'Boundary'
             elif (x3 == x2) and (y1 >= y3 >= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                Plotter.add_ray(0, x, y, 8, y)
                 result = 'Boundary'
         elif y1 == y2:
             if (y3 == y2) and (x1 <= x3 <= x2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                Plotter.add_ray(0, x, y, 8, y)
                 result = 'Boundary'
             elif (y3 == y2) and (x1 >= x3 >= x2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                Plotter.add_ray(0, x, y, 8, y)
                 result = 'Boundary'
         elif (y3 - y1) == ((y2 - y1) / (x2 - x1)) * (x3 - x1):
             if (x1 <= x3 <= x2) and (y1 >= y3 >= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                Plotter.add_ray(0, x, y, 8, y)
                 result = 'Boundary'
             elif (x1 >= x3 >= x2) and (y1 >= y3 >= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                Plotter.add_ray(0, x, y, 8, y)
                 result = 'Boundary'
 
     return result
