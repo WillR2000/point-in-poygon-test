@@ -1,16 +1,18 @@
 from plotter import Plotter
 from functions import lines
 from functions import read_polygon_csv
-from functions_input import classify_point
 def classify_point():
     x_coord, y_coord = read_polygon_csv()
-    x, y = main()
+    x = float(input('x Coordinate: '))
+    y = float(input('Y Coordinate: '))
+    result = 0
 
     # Methods developed from week 5 presentation - Aldo Lipani
     if min(x_coord) <= x <= max(x_coord) and min(y_coord) <= y <= max(y_coord):
         ''
     else:
         Plotter.add_point(0, x, y, kind='outside')
+        result = 'Outside'
 
     count = 0
     for line in lines():
@@ -30,13 +32,14 @@ def classify_point():
                     count = count + 1
     if count % 2 == 0:
         Plotter.add_point(0, x, y, kind='outside')
+        result = 'Outside'
     else:
         Plotter.add_point(0, x, y, kind='inside')
+        result = 'Inside'
 
     # Code lifted and adapted from:
     # https://www.kite.com/python/answers/how-to-determine-if-a-point-is-on-a-line-segment-in-python
     # Methods developed from week 5 presentation - Aldo Lipani
-    pol_results = []
 
     for line in lines():
         x1, x2, x3, = line[0], line[2], x
@@ -44,40 +47,36 @@ def classify_point():
         if x1 == x2:
             if (x3 == x2) and (y1 <= y3 <= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                result = 'Boundary'
             elif (x3 == x2) and (y1 >= y3 >= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                result = 'Boundary'
         elif y1 == y2:
             if (y3 == y2) and (x1 <= x3 <= x2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                result = 'Boundary'
             elif (y3 == y2) and (x1 >= x3 >= x2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                result = 'Boundary'
         elif (y3 - y1) == ((y2 - y1) / (x2 - x1)) * (x3 - x1):
             if (x1 <= x3 <= x2) and (y1 >= y3 >= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                result = 'Boundary'
             elif (x1 >= x3 >= x2) and (y1 >= y3 >= y2):
                 Plotter.add_point(0, x3, y3, kind='boundary')
+                result = 'Boundary'
 
-
+    return result
 
 def main():
+    print('Insert point information:')
     plotter = Plotter()
-    print(read_polygon_csv())
+    result = classify_point()
+    print('The position of your point is:', result)
 
-    print('Insert point information')
-    x = 2
-    y = 2
-
-    print(classify_point())
-
-    print('plot polygon and point')
     plotter.show()
-
 
 if __name__ == '__main__':
     main()
-
-
-
-
 
 

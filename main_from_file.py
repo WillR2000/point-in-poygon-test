@@ -1,6 +1,8 @@
 from functions import read_polygon_csv
 from functions import read_input_csv
 from functions import classify_points
+from functions import write_to_csv
+
 
 from plotter import Plotter
 
@@ -12,7 +14,7 @@ def main():
 
     print(classify_points())
 
-    print('write output.csv')
+    print(write_to_csv())
 
     print('plot polygon and points')
     plotter.show()

@@ -4,8 +4,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 
-
-
 class Geometry:
     def __init__(self, name):
         self.__name = name
@@ -55,9 +53,6 @@ class Plotter:
     def add_polygon(self, xs, ys) -> object:
         plt.fill(xs, ys, 'lightgray', label='Polygon')
 
-    def add_mbr(self, xs, ys) -> object:
-        plt.fill(xs, ys, 'gray', label='MBR')
-
     def add_point(self, x, y, kind=None):
         if kind == 'outside':
             plt.plot(x, y, 'ro', label='Outside')
@@ -72,7 +67,18 @@ class Plotter:
         handles, labels = plt.gca().get_legend_handles_labels()
         by_label = OrderedDict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys())
+        plt.xlabel('x', color = 'k')
+        plt.ylabel('y', color = 'k')
+        plt.grid()
         plt.show()
+
+
+# class Pointresults:
+#     def __init__(self, id, x, y, kind):
+#         self.id = id
+#         self.x = str(x)
+#         self.y = str(y)
+#         self.kind = kind
 
 
 def read_polygon_csv():
@@ -104,7 +110,7 @@ def read_input_csv():
 
         for each_point in points:
             id, x, y = each_point.split(',')
-            id_x_y.append([float(x.strip()), float(y.strip())])
+            id_x_y.append([str(id.strip()), float(x.strip()), float(y.strip())])
 
         input_points = id_x_y
 
@@ -190,6 +196,7 @@ def max_poly_y():
             res = c
     return res
 
+
 def lines():
     with open('polygon.csv') as p:
         coordinates = p.readlines()
@@ -215,73 +222,94 @@ def lines():
     return lineslist
 
 
-
 def classify_points():
     mbr_results = []
+    coords = []
     classify_results = []
 
     # Methods developed from week 5 presentation - Aldo Lipani
     for value in read_input_csv():
-        if min_poly_x() <= value[0] <= max_poly_x() and min_poly_y() <= value[1] <= max_poly_y():
+        if min_poly_x() <= value[1] <= max_poly_x() and min_poly_y() <= value[2] <= max_poly_y():
             mbr_results.append(value)
         else:
-            Plotter.add_point(0, value[0], value[1], kind='outside')
-            classify_results.append(value)
+            Plotter.add_point(0, value[1], value[2], kind='outside')
+            classify_results.append([value, 'Outside'])
 
     for mbp in mbr_results:
         count = 0
         for line in lines():
-            p1x = line[0]
-            p1y = line[1]
-            p2x = line[2]
-            p2y = line[3]
-            if mbp[0] < p1x or mbp[0] < p2x:
-                if p1y <= mbp[1] < p2y or p2y <= mbp[1] < p1y:
+            x1, x2, x3, = line[0], line[2], mbp[1]
+            y1, y2, y3, = line[1], line[3], mbp[2]
+            if x3 < x1 or x3 < x2:
+                if y1 <= y3 < y2 or y2 <= y3 < y1:
                     count = count + 1
-                if mbp[1] == p1y or mbp[1] == p2y:
+                if y3 == y1 or y3 == y2:
                     count = count + 2
-                if p1y == p2y == mbp[1]:
+                if y1 == y2 == y3:
                     count = count + 2
-                if p1x > p2x and p1y > p2y:
-                    if mbp[1] == p2y and p1x >= mbp[0] >= p2x:
+                if x1 > x2 and y1 > y2:
+                    if y3 == y2 and x1 >= x3 >= x2:
                         count = count + 1
         if count % 2 == 0:
-            Plotter.add_point(0, mbp[0], mbp[1], kind='outside')
-            classify_results.append(mbp)
-            classify_results.append('Outside')
+            Plotter.add_point(0, x3, y3, kind='outside')
+            classify_results.append([mbp, 'Outside'])
         else:
-            Plotter.add_point(0, mbp[0], mbp[1], kind='inside')
-            classify_results.append(mbp)
-            classify_results.append('Inside')
-
-    print(classify_results)
+            Plotter.add_point(0, x3, y3, kind='inside')
+            classify_results.append([mbp, 'Inside'])
 
     # Code lifted and adapted from:
     # https://www.kite.com/python/answers/how-to-determine-if-a-point-is-on-a-line-segment-in-python
     # Methods developed from week 5 presentation - Aldo Lipani
-    pol_results = []
     for mbp in mbr_results:
         for line in lines():
-            x1, x2, x3, = line[0], line[2], mbp[0]
-            y1, y2, y3, = line[1], line[3], mbp[1]
+            x1, x2, x3, = line[0], line[2], mbp[1]
+            y1, y2, y3, = line[1], line[3], mbp[2]
             if x1 == x2:
                 if (x3 == x2) and (y1 <= y3 <= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
-                    classify_results.append(mbp)
+                    classify_results.append([mbp, 'Boundary'])
                 elif (x3 == x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    classify_results.append([mbp, 'Boundary'])
             elif y1 == y2:
                 if (y3 == y2) and (x1 <= x3 <= x2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    classify_results.append([mbp, 'Boundary'])
                 elif (y3 == y2) and (x1 >= x3 >= x2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    classify_results.append([mbp, 'Boundary'])
             elif (y3 - y1) == ((y2 - y1) / (x2 - x1)) * (x3 - x1):
                 if (x1 <= x3 <= x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    classify_results.append([mbp, 'Boundary'])
                 elif (x1 >= x3 >= x2) and (y1 >= y3 >= y2):
                     Plotter.add_point(0, x3, y3, kind='boundary')
+                    classify_results.append([mbp, 'Boundary'])
+
+    return classify_results
 
 
+def write_to_csv():
+    classify_results = classify_points()
+
+    # for result in classify_results:
+    #     result = str(result)
+    #     classify_new.append(result)
+    #
+    # classify_results = classify_new
+
+    print('Class', classify_results)
 
 
+    with open("output.csv", "w") as c:
+        c.write('ID, Position' + '\n')
 
+        for result in classify_results:
+            data = [str(int(result[0][0])), result[1]]
+            c.write(','.join(data) + '\n')
+
+        # for result in classify_results:
+        #     data1 = result[2], result[4], result[6]
+        #     data2 = result[8],'\n'
+        #     data = data1 + data2
+        #     c.write(data)
