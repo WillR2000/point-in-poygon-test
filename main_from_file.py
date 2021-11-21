@@ -13,8 +13,6 @@ def main():
     print(classify_points())
 
     print(write_to_csv())
-
-    print('plot polygon and points')
     plotter.show()
 
 if __name__ == '__main__':
