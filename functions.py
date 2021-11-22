@@ -279,7 +279,6 @@ def write_to_csv():
             # Writes data into the csv, creating a new line after each result in the list
 
 
-
 # THIS IS AN ADDITIONAL FEATURE
 def classify_point_experiment():
     # This method is an adaption on classify_points() from the functions.py file. For an overview of the mathematical\
@@ -362,7 +361,3 @@ def classify_point_experiment():
     print('Your point is located:', result)
 
     return result
-
-
-
-

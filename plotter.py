@@ -12,6 +12,7 @@ class Plotter:
 
     def __init__(self):
         plt.figure()
+
     # This method takes the x and y coordinates of the polygon.csv and plots them
     def add_polygon(self, xs, ys) -> object:
         plt.fill(xs, ys, 'lightgray', label='Polygon')  # This defines the characteristics of the polygon
