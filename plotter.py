@@ -39,6 +39,7 @@ class Plotter:
         handles, labels = plt.gca().get_legend_handles_labels()
         by_label = OrderedDict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys())
+        plt.title('Point in Polygon Test')
         plt.xlabel('x', color='k')  # This characteristic labels the x axis to complete the plot
         plt.ylabel('y', color='k')  # This characteristic labels the y axis to complete the plot
         plt.grid()  # This characteristic adds a grid to the plot to assist with user viewing.
